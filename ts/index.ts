@@ -16,7 +16,7 @@ export class Index {
   private makeScene() {
     const ground = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(400, 400),
-      new THREE.MeshPhongMaterial({ color: 'SlateGray' }));
+      new THREE.MeshPhongMaterial({ color: 'YellowGreen' }));
     ground.rotateX(-Math.PI / 2);
     this.scene.add(ground);
 
