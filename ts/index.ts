@@ -29,10 +29,18 @@ export class Index {
     const light = new THREE.HemisphereLight('White', 'SlateGray', 1.0);
     this.scene.add(light);
 
-    this.scene.fog = new THREE.Fog('DeepSkyBlue', 50, 100);
+    this.scene.fog = new THREE.Fog('DeepSkyBlue', 0, 30);
 
-    this.camera.position.set(0, 1.7, 0);
-    this.camera.lookAt(0, 1.7, -1.5);
+    for (const x of [-5, 5]) {
+      for(let z=-5; z>-100;z-=5){
+        const house = Assets.models.get('cat house').clone();
+        house.position.set(x, 0, z);
+        this.scene.add(house);
+      }  
+    }
+    
+    this.camera.position.set(0, 1.7, 2.0);
+    this.camera.lookAt(0, 1.0, 0);
     this.scene.add(this.camera);
   }
 
@@ -50,6 +58,8 @@ export class Index {
       // const tick = new Tick(elapsedS, deltaS, frameCount);
       // this.tickEverything(this.scene, tick);
       this.renderer.render(this.scene, this.camera);
+
+      this.camera.position.z -=deltaS;
       // composer.render();
     });
   }
