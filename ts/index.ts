@@ -1,5 +1,7 @@
+import { start } from "repl";
 import * as THREE from "three";
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
+import { Assets } from "./assets";
 
 export class Index {
   private scene = new THREE.Scene();
@@ -60,4 +62,9 @@ export class Index {
 
 }
 
-new Index();
+const initialize = async function () {
+  await Assets.load();
+  new Index();
+}
+
+initialize();
