@@ -44,7 +44,7 @@ export class Assets {
   }
 
   public static async load() {
-    for (const name of ['cat house']) {
+    for (const name of ['cat house', 'cat tree']) {
       const o =  await this.loadOne(`models/${name}.glb`);
       this.models.set(name, o);
       this.logModel(o, '');
