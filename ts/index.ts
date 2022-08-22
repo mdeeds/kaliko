@@ -34,6 +34,7 @@ export class Index {
     for (const x of [-5, 5]) {
       for(let z=-5; z>-100;z-=5){
         const house = Assets.models.get('cat house').clone();
+        Assets.setMaterials(house, new THREE.Color(Assets.randomColor()));
         house.position.set(x, 0, z);
         this.scene.add(house);
       }  
