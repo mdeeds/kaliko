@@ -1,16 +1,19 @@
-import { start } from "repl";
 import * as THREE from "three";
+
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { Assets } from "./assets";
+import { K } from "./keyboard";
 
 export class Index {
   private scene = new THREE.Scene();
   private renderer = new THREE.WebGLRenderer()
   private camera = new THREE.PerspectiveCamera(75, 1.0, 0.01, 400);
+  private keyboard: K;
   constructor() {
     this.makeScene();
     this.setUpRenderer();
     this.setUpPage();
+    this.keyboard = new K();
   }
 
   private makeScene() {
@@ -36,6 +39,11 @@ export class Index {
         const house = Assets.models.get('cat house').clone();
         Assets.setMaterials(house, new THREE.Color(Assets.randomColor()));
         house.position.set(x, 0, z);
+        if (x < 0) {
+          house.rotateY(-Math.PI/2);
+        } else { 
+          house.rotateY(Math.PI/2);
+        }
         this.scene.add(house);
       }  
     }
@@ -60,8 +68,18 @@ export class Index {
       // this.tickEverything(this.scene, tick);
       this.renderer.render(this.scene, this.camera);
 
-      this.camera.position.z -=deltaS;
-      // composer.render();
+      if (this.keyboard.down('ArrowUp')) {
+        this.camera.position.z -=deltaS*2;
+      }
+      if (this.keyboard.down('ArrowDown')) {
+        this.camera.position.z +=deltaS*2;
+      }
+      if (this.keyboard.down('ArrowRight')) {
+        this.camera.rotateY(-Math.PI * deltaS);
+      }
+      if (this.keyboard.down('ArrowLeft')) {
+        this.camera.rotateY(Math.PI * deltaS);
+      }
     });
   }
 

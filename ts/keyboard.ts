@@ -1,9 +1,8 @@
-export class Keyboard {
+export class K {
+  private polled = new Set<string>();
+  private keysDown = new Set<string>();
 
-  private static polled = new Set<string>();
-  private static keysDown = new Set<string>();
-
-  static {
+  constructor() {
     document.body.addEventListener('keydown', (ev: KeyboardEvent) => {
       this.keysDown.add(ev.code);
     });
@@ -13,11 +12,11 @@ export class Keyboard {
     });
   }
 
-  public static down(code: string) {
+  public down(code: string) {
     return this.keysDown.has(code);
   }
 
-  public static justPressed(code: string) {
+  public justPressed(code: string) {
     if (this.polled.has(code)) {
       return false;
     }
