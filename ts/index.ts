@@ -35,23 +35,26 @@ export class Index {
     this.scene.fog = new THREE.Fog('DeepSkyBlue', 0, 30);
 
     for (const x of [-5, 5]) {
-      for(let z=-5; z>-100;z-=5){
+      for (let z = -5; z > -100; z -= 5) {
         const house = Assets.models.get('cat house').clone();
         Assets.setMaterials(house, new THREE.Color(Assets.randomColor()));
         house.position.set(x, 0, z);
         if (x < 0) {
-          house.rotateY(-Math.PI/2);
-        } else { 
-          house.rotateY(Math.PI/2);
+          house.rotateY(-Math.PI / 2);
+        } else {
+          house.rotateY(Math.PI / 2);
         }
         this.scene.add(house);
-      }  
+      }
     }
-    
+
     this.camera.position.set(0, 1.7, 2.0);
-    this.camera.lookAt(0, 1.0, 0);
+    this.camera.lookAt(0, 1.7, 0);
     this.scene.add(this.camera);
   }
+
+  private forward = new THREE.Vector3(0, 0, -1);
+  private tmp = new THREE.Vector3();
 
   private setUpRenderer() {
     this.renderer.setSize(512, 512);
@@ -69,10 +72,22 @@ export class Index {
       this.renderer.render(this.scene, this.camera);
 
       if (this.keyboard.down('ArrowUp')) {
-        this.camera.position.z -=deltaS*2;
+        this.tmp.copy(this.forward);
+        this.camera.normalMatrix.getNormalMatrix(this.camera.matrixWorld);
+        this.tmp.applyMatrix3(this.camera.normalMatrix);
+        this.tmp.y = 0;
+        this.tmp.normalize();
+        this.tmp.multiplyScalar(2 * deltaS);
+        this.camera.position.add(this.tmp);
       }
       if (this.keyboard.down('ArrowDown')) {
-        this.camera.position.z +=deltaS*2;
+        this.tmp.copy(this.forward);
+        this.camera.normalMatrix.getNormalMatrix(this.camera.matrixWorld);
+        this.tmp.applyMatrix3(this.camera.normalMatrix);
+        this.tmp.y = 0;
+        this.tmp.normalize();
+        this.tmp.multiplyScalar(-2 * deltaS);
+        this.camera.position.add(this.tmp);
       }
       if (this.keyboard.down('ArrowRight')) {
         this.camera.rotateY(-Math.PI * deltaS);
