@@ -3,12 +3,14 @@ import * as THREE from "three";
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { Assets } from "./assets";
 import { K } from "./keyboard";
+import { Palette } from "./palette";
 
 export class Index {
   private scene = new THREE.Scene();
   private renderer = new THREE.WebGLRenderer()
   private camera = new THREE.PerspectiveCamera(75, 1.0, 0.01, 400);
   private keyboard: K;
+  private p = new Palette(new THREE.Color('purple'));
   constructor() {
     this.makeScene();
     this.setUpRenderer();
@@ -19,7 +21,8 @@ export class Index {
   private makeScene() {
     const ground = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(400, 400),
-      new THREE.MeshPhongMaterial({ color: 'YellowGreen' }));
+      new THREE.MeshPhongMaterial(
+        { color: this.p.in(new THREE.Color('YellowGreen')) }));
     ground.rotateX(-Math.PI / 2);
     this.scene.add(ground);
 
@@ -32,12 +35,13 @@ export class Index {
     const light = new THREE.HemisphereLight('White', 'SlateGray', 1.0);
     this.scene.add(light);
 
-    this.scene.fog = new THREE.Fog('DeepSkyBlue', 0, 30);
+    this.scene.fog = new THREE.Fog(
+      this.p.in(new THREE.Color('DeepSkyBlue')), 0, 30);
 
     for (const x of [-5, 5]) {
       for (let z = -5; z > -100; z -= 5) {
         const house = Assets.models.get('cat house').clone();
-        Assets.setMaterials(house, new THREE.Color(Assets.randomColor()));
+        Assets.setMaterials(house, Assets.randomColor(this.p));
         house.position.set(x, 0, z);
         if (x < 0) {
           house.rotateY(-Math.PI / 2);
