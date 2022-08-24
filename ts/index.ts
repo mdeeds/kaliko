@@ -4,13 +4,14 @@ import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { Assets } from "./assets";
 import { K } from "./keyboard";
 import { Palette } from "./palette";
+import { S } from "./settings";
 
 export class Index {
   private scene = new THREE.Scene();
   private renderer = new THREE.WebGLRenderer()
   private camera = new THREE.PerspectiveCamera(75, 1.0, 0.01, 400);
   private keyboard: K;
-  private p = new Palette(new THREE.Color('purple'));
+  private p = new Palette(new THREE.Color(S.float('pr'), S.float('pg'), S.float('pb')));
   constructor() {
     this.makeScene();
     this.setUpRenderer();

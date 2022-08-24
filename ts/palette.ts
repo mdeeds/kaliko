@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { S } from "./settings";
 
 class ColorLine {
   private from = new THREE.Vector3();
@@ -12,20 +13,19 @@ class ColorLine {
     this.dir.normalize;
   }
 
-  private tmp = new THREE.Vector3();
-  private tmp2 = new THREE.Vector3();
   in(color: THREE.Color, outColor: THREE.Color): number {
-    this.tmp.set(color.r, color.g, color.b);
-    this.tmp.sub(this.from);
-    const distance = this.tmp.dot(this.dir);
-    this.tmp2.copy(this.dir);
-    this.tmp2.multiplyScalar(distance);
-    this.tmp.add(this.tmp2);
-    outColor.setRGB(this.tmp.x, this.tmp.y, this.tmp.z);
-    this.tmp2.set(color.r, color.g, color.b);
-    this.tmp2.sub(this.tmp);
+    const translated = new THREE.Vector3(color.r, color.g, color.b);
+    translated.sub(this.from);
+    const distance = translated.dot(this.dir);
+    const outV = new THREE.Vector3();
+    outV.copy(this.dir);
+    outV.multiplyScalar(distance);
+    outV.add(this.from);
+    outColor.setRGB(outV.x, outV.y, outV.z);
+    translated.set(color.r, color.g, color.b);
+    translated.sub(outV);
     // console.log(`AAAAA: ${this.tmp2.length()} ${[outColor.r, outColor.g, outColor.b]}`);
-    return this.tmp2.length();
+    return translated.length();
   }
 }
 
@@ -43,8 +43,8 @@ export class Palette {
     hsl.h = (hsl.h + 0.5) % 1;
     this.complement.setHSL(hsl.h, hsl.s, hsl.l);
     // console.log(`AAAAA ${[this.complement.r, this.complement.g, this.complement.b]}`);
-    this.complementS1.setHSL((hsl.h + 0.01) % 1, hsl.s, hsl.l);
-    this.complementS2.setHSL((hsl.h - 0.01) % 1, hsl.s, hsl.l);
+    this.complementS1.setHSL((hsl.h + S.float('ss')) % 1, hsl.s, hsl.l);
+    this.complementS2.setHSL((hsl.h + 1 - S.float('ss')) % 1, hsl.s, hsl.l);
 
     const black = new THREE.Color('Black');
     const white = new THREE.Color('White');
@@ -59,18 +59,18 @@ export class Palette {
     this.lines.push(new ColorLine(new THREE.Color('#eee'), white));
   }
 
-  private tmp = new THREE.Color();
   in(color: THREE.Color): THREE.Color {
     const result = new THREE.Color();
+    const candidate = new THREE.Color();
     let shortest = Infinity;
     for (const cl of this.lines) {
-      const d = cl.in(color, this.tmp);
+      const d = cl.in(color, candidate);
       if (d < shortest) {
         shortest = d;
-        result.copy(this.tmp);
-        // console.log(`Better: ${d} ${[this.tmp.r, this.tmp.g, this.tmp.b]}`);
+        result.copy(candidate);
       }
     }
+    console.log(`Best: ${shortest} ${[result.r, result.g, result.b]} is not ${[color.r, color.g, color.b]}`);
     return result;
   }
 }
