@@ -11,6 +11,7 @@ export class Index {
   private scene = new THREE.Scene();
   private renderer = new THREE.WebGLRenderer()
   private camera = new THREE.PerspectiveCamera(75, 1.0, 0.01, 400);
+  private universe = new THREE.Group();
   private keyboard: K;
   private p = new Palette(new THREE.Color(S.float('pr'), S.float('pg'), S.float('pb')));
   constructor() {
@@ -21,6 +22,7 @@ export class Index {
   }
 
   private makeScene() {
+    this.scene.add(this.universe);
     const ground = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(400, 400),
       new THREE.MeshPhongMaterial(
@@ -55,7 +57,7 @@ export class Index {
     // }
 
     const m = new WorldMap(this.p);
-    this.scene.add(m);
+    this.universe.add(m);
 
     this.camera.position.set(0, 1.7, 2.0);
     this.camera.lookAt(0, 1.7, 0);
@@ -87,7 +89,7 @@ export class Index {
         this.tmp.y = 0;
         this.tmp.normalize();
         this.tmp.multiplyScalar(2 * deltaS);
-        this.camera.position.add(this.tmp);
+        this.universe.position.sub(this.tmp);
       }
       if (this.keyboard.down('ArrowDown')) {
         this.tmp.copy(this.forward);
@@ -96,7 +98,7 @@ export class Index {
         this.tmp.y = 0;
         this.tmp.normalize();
         this.tmp.multiplyScalar(-2 * deltaS);
-        this.camera.position.add(this.tmp);
+        this.universe.position.sub(this.tmp);
       }
       if (this.keyboard.down('ArrowRight')) {
         this.camera.rotateY(-Math.PI * deltaS);
