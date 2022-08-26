@@ -5,6 +5,7 @@ import { Assets } from "./assets";
 import { K } from "./keyboard";
 import { Palette } from "./palette";
 import { S } from "./settings";
+import { WorldMap } from "./worldMap";
 
 export class Index {
   private scene = new THREE.Scene();
@@ -37,21 +38,24 @@ export class Index {
     this.scene.add(light);
 
     this.scene.fog = new THREE.Fog(
-      this.p.in(new THREE.Color('DeepSkyBlue')), 0, 30);
+      this.p.in(new THREE.Color('DeepSkyBlue')), 0, 100);
 
-    for (const x of [-5, 5]) {
-      for (let z = -5; z > -100; z -= 5) {
-        const house = Assets.models.get('cat house').clone();
-        Assets.setMaterials(house, Assets.randomColor(this.p));
-        house.position.set(x, 0, z);
-        if (x < 0) {
-          house.rotateY(-Math.PI / 2);
-        } else {
-          house.rotateY(Math.PI / 2);
-        }
-        this.scene.add(house);
-      }
-    }
+    // for (const x of [-5, 5]) {
+    //   for (let z = -5; z > -100; z -= 5) {
+    //     const house = Assets.models.get('cat house').clone();
+    //     Assets.setMaterials(house, Assets.randomColor(this.p));
+    //     house.position.set(x, 0, z);
+    //     if (x < 0) {
+    //       house.rotateY(-Math.PI / 2);
+    //     } else {
+    //       house.rotateY(Math.PI / 2);
+    //     }
+    //     this.scene.add(house);
+    //   }
+    // }
+
+    const m = new WorldMap(this.p);
+    this.scene.add(m);
 
     this.camera.position.set(0, 1.7, 2.0);
     this.camera.lookAt(0, 1.7, 0);
