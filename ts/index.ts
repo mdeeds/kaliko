@@ -82,13 +82,14 @@ export class Index {
       // this.tickEverything(this.scene, tick);
       this.renderer.render(this.scene, this.camera);
 
+      //2
       if (this.keyboard.down('ArrowUp')) {
         this.tmp.copy(this.forward);
         this.camera.normalMatrix.getNormalMatrix(this.camera.matrixWorld);
         this.tmp.applyMatrix3(this.camera.normalMatrix);
         this.tmp.y = 0;
         this.tmp.normalize();
-        this.tmp.multiplyScalar(2 * deltaS);
+        this.tmp.multiplyScalar(10 * deltaS);
         this.universe.position.sub(this.tmp);
       }
       if (this.keyboard.down('ArrowDown')) {

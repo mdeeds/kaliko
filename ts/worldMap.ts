@@ -45,9 +45,9 @@ export class WorldMap extends THREE.Object3D {
     "27...........................................................",
     "28...........................................................",
     "29...........................................................",
-    "30...........................................................",
+    "30tttttttttttttttttttttttttttttttttttttttttttttttttttttttttt.",
     "31hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",
-    "32...........................................................",
+    "32ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
     "33...........................................................",
     "34...........................................................",
     "35...........................................................",
@@ -55,8 +55,8 @@ export class WorldMap extends THREE.Object3D {
     "37...........................................................",
     "38...........................................................",
     "39...........................................................",
-    "40...........................................................",
-    "41...........................................................",
+    "40........................thththt............................",
+    "41........................ht.h.th............................",
     "42...........................................................",
     "43...........................................................",
     "44...........................................................",
@@ -99,9 +99,15 @@ export class WorldMap extends THREE.Object3D {
     // }
     return house;
   }
+  private tree(): THREE.Object3D {
+    const tree = Assets.models.get('cat tree').clone();
+    Assets.setMaterials(tree, this.p.in(new THREE.Color('Green')));
+    return tree;
+  }
 
   constructor(private p: Palette) {
     super();
+
 
     let z = -5 * 30;
     for (const l of this.map) {
@@ -127,6 +133,7 @@ export class WorldMap extends THREE.Object3D {
           case '8': o = this.box(8); break;
           case '9': o = this.box(9); break;
           case 'h': o = this.house(); break;
+          case 't': o = this.tree(); break;
         }
         if (o) {
           o.position.x = x;
