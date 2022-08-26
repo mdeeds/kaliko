@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { BoxBufferGeometry, IcosahedronBufferGeometry, MeshPhongMaterial } from "three";
+import { Assets } from "./assets";
 import { Palette } from "./palette";
 
 export class WorldMap extends THREE.Object3D {
@@ -45,7 +46,7 @@ export class WorldMap extends THREE.Object3D {
     "28...........................................................",
     "29...........................................................",
     "30...........................................................",
-    "31...........................................................",
+    "31hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",
     "32...........................................................",
     "33...........................................................",
     "34...........................................................",
@@ -88,6 +89,17 @@ export class WorldMap extends THREE.Object3D {
     return b;
   }
 
+  private house(): THREE.Object3D {
+    const house = Assets.models.get('cat house').clone();
+    Assets.setMaterials(house, Assets.randomColor(this.p));
+    // if (x < 0) {
+    //   house.rotateY(-Math.PI / 2);
+    // } else {
+    //   house.rotateY(Math.PI / 2);
+    // }
+    return house;
+  }
+
   constructor(private p: Palette) {
     super();
 
@@ -114,6 +126,7 @@ export class WorldMap extends THREE.Object3D {
           case '7': o = this.box(7); break;
           case '8': o = this.box(8); break;
           case '9': o = this.box(9); break;
+          case 'h': o = this.house(); break;
         }
         if (o) {
           o.position.x = x;
