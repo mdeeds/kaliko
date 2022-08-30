@@ -65,7 +65,24 @@ export class Index {
   }
 
   private forward = new THREE.Vector3(0, 0, -1);
+  private right = new THREE.Vector3(1, 0, 0);
+  private up = new THREE.Vector3(0, 1, 0);
   private tmp = new THREE.Vector3();
+
+
+  private cameraRelative(dir: THREE.Vector3, out: THREE.Vector3) {
+    this.camera.normalMatrix.getNormalMatrix(this.camera.matrixWorld);
+    out.copy(dir);
+    out.applyMatrix3(this.camera.normalMatrix);
+  }
+
+  private strafe(dir: THREE.Vector3, deltaS: number, scale: number) {
+    this.cameraRelative(dir, this.tmp);
+    this.tmp.y = 0;
+    this.tmp.normalize();
+    this.tmp.multiplyScalar(scale * deltaS);  // Was 2
+    this.universe.position.sub(this.tmp);
+  }
 
   private setUpRenderer() {
     this.renderer.setSize(512, 512);
@@ -82,30 +99,29 @@ export class Index {
       // this.tickEverything(this.scene, tick);
       this.renderer.render(this.scene, this.camera);
 
-      //2
-      if (this.keyboard.down('ArrowUp')) {
-        this.tmp.copy(this.forward);
-        this.camera.normalMatrix.getNormalMatrix(this.camera.matrixWorld);
-        this.tmp.applyMatrix3(this.camera.normalMatrix);
-        this.tmp.y = 0;
-        this.tmp.normalize();
-        this.tmp.multiplyScalar(10 * deltaS);
-        this.universe.position.sub(this.tmp);
+      if (this.keyboard.down('KeyW')) {
+        this.strafe(this.forward, deltaS, 10);  // Was 2
       }
-      if (this.keyboard.down('ArrowDown')) {
-        this.tmp.copy(this.forward);
-        this.camera.normalMatrix.getNormalMatrix(this.camera.matrixWorld);
-        this.tmp.applyMatrix3(this.camera.normalMatrix);
-        this.tmp.y = 0;
-        this.tmp.normalize();
-        this.tmp.multiplyScalar(-2 * deltaS);
-        this.universe.position.sub(this.tmp);
+      if (this.keyboard.down('KeyS')) {
+        this.strafe(this.forward, deltaS, -2);
+      }
+      if (this.keyboard.down('KeyA')) {
+        this.strafe(this.right, deltaS, -7);  // Was 2
+      }
+      if (this.keyboard.down('KeyD')) {
+        this.strafe(this.right, deltaS, 7);
       }
       if (this.keyboard.down('ArrowRight')) {
-        this.camera.rotateY(-Math.PI * deltaS);
+        this.camera.rotateOnAxis(this.up, -Math.PI * deltaS);
       }
       if (this.keyboard.down('ArrowLeft')) {
-        this.camera.rotateY(Math.PI * deltaS);
+        this.camera.rotateOnAxis(this.up, Math.PI * deltaS);
+      }
+      if (this.keyboard.down('ArrowUp')) {
+        this.camera.rotateOnAxis(this.right, 0.5 * Math.PI * deltaS);
+      }
+      if (this.keyboard.down('ArrowDown')) {
+        this.camera.rotateOnAxis(this.right, -0.5 * Math.PI * deltaS);
       }
     });
   }
