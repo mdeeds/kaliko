@@ -22,9 +22,9 @@ export class S {
 
   static {
     S.setDefault('pr', 0.0, 'Primary red');
-    S.setDefault('pg', 0.8, 'Primary green');
-    S.setDefault('pb', 1.0, 'Primary blue');
-    S.setDefault('ss', 0.07, 'Secondary split');
+    S.setDefault('pg', 1.0, 'Primary green');
+    S.setDefault('pb', 0.0, 'Primary blue');
+    S.setDefault('ss', 0.25, 'Secondary split');
   }
 
   public static float(name: string): number {
