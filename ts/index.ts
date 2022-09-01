@@ -12,8 +12,10 @@ export class Index {
   private renderer = new THREE.WebGLRenderer()
   private camera = new THREE.PerspectiveCamera(75, 1.0, 0.01, 400);
   private universe = new THREE.Group();
+  private playerPosition = new THREE.Vector3();
   private keyboard: K;
   private p = new Palette(new THREE.Color(S.float('pr'), S.float('pg'), S.float('pb')));
+  private map: WorldMap;
   constructor() {
     this.makeScene();
     this.setUpRenderer();
@@ -56,8 +58,8 @@ export class Index {
     //   }
     // }
 
-    const m = new WorldMap(this.p);
-    this.universe.add(m);
+    this.map = new WorldMap(this.p);
+    this.universe.add(this.map);
 
     this.camera.position.set(0, 1.7, 2.0);
     this.camera.lookAt(0, 1.7, 0);
@@ -82,6 +84,8 @@ export class Index {
     this.tmp.normalize();
     this.tmp.multiplyScalar(scale * deltaS);  // Was 2
     this.universe.position.sub(this.tmp);
+    this.playerPosition.copy(this.universe.position);
+    this.playerPosition.multiplyScalar(-1);
   }
 
   private setUpRenderer() {
@@ -122,6 +126,12 @@ export class Index {
       }
       if (this.keyboard.down('ArrowDown')) {
         this.camera.rotateOnAxis(this.right, -0.5 * Math.PI * deltaS);
+      }
+
+      if (this.map.collision(this.playerPosition, 0.3, this.tmp)) {
+        this.playerPosition.add(this.tmp);
+        this.universe.position.copy(this.playerPosition);
+        this.universe.position.multiplyScalar(-1);
       }
     });
   }
