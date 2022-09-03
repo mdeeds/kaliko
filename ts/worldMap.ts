@@ -6,13 +6,24 @@ import { TextMap } from "./textMap";
 
 export class WorldMap extends THREE.Object3D {
 
+
   private map = new TextMap();
+
 
   private box(height: number): THREE.Object3D {
     const boxHeight = height * 5 + 0.5;
     const b = new THREE.Mesh(
       new BoxBufferGeometry(5, boxHeight, 5),
       new MeshPhongMaterial({ color: this.p.in(new THREE.Color('#ef4')) })
+    );
+    b.position.y = boxHeight / 2;
+    return b;
+  }
+  private ground(color: string): THREE.Object3D {
+    const boxHeight = 0.01;
+    const b = new THREE.Mesh(
+      new BoxBufferGeometry(5, boxHeight, 5),
+      new MeshPhongMaterial({ color: this.p.in(new THREE.Color(color)) })
     );
     b.position.y = boxHeight / 2;
     return b;
@@ -55,12 +66,14 @@ export class WorldMap extends THREE.Object3D {
           case '3': o = this.box(3); break;
           case '4': o = this.box(4); break;
           case '5': o = this.box(5); break;
-          case '6': o = this.box(6); break;
+          case 'o': case '6': o = this.box(6); break;
           case '7': o = this.box(7); break;
           case '8': o = this.box(8); break;
           case '9': o = this.box(9); break;
           case 'h': o = this.house(); break;
           case 't': o = this.tree(); break;
+          case 'p': o = this.ground('Green'); break;
+          case 'g': o = this.ground('Green'); break;
         }
         if (o) {
           o.position.x = x;
