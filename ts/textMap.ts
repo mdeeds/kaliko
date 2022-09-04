@@ -55,13 +55,14 @@ export class TextMap {
   private intersect(cx: number, cz: number, cd: number,
     ox: number, oz: number, od: number, undo: THREE.Vector3): boolean {
     undo.set(0, 0, 0);
+    const rSum = (cd + od) / 2;
     const dx = cx - ox;
     const dz = cz - oz;
-    const overX = (cd + od) - Math.abs(dx);
-    const overZ = (cd + od) - Math.abs(dz);
+    const overX = rSum - Math.abs(dx);
+    const overZ = rSum - Math.abs(dz);
     if (overX > 0 && overZ > 0) {
-      undo.x = (cd + od - Math.abs(dx)) * Math.sign(dx);
-      undo.z = (cd + od - Math.abs(dz)) * Math.sign(dz);
+      undo.x = (rSum - Math.abs(dx)) * Math.sign(dx);
+      undo.z = (rSum - Math.abs(dz)) * Math.sign(dz);
       return true;
     }
     return false;
@@ -80,7 +81,6 @@ export class TextMap {
         for (let i = ci - 1; i <= ci + 1; ++i) {
           if (i >= 0 && i < line.length) {
             const c = line[i];
-            console.log(`c = ${c} @ ${[i, j]}`);
             const od = this.diameter(c);
             if (od > 0) {
               const x = 5 * i - 15 * 5;
