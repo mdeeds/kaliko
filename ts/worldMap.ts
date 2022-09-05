@@ -5,10 +5,7 @@ import { Palette } from "./palette";
 import { TextMap } from "./textMap";
 
 export class WorldMap extends THREE.Object3D {
-
-
   private map = new TextMap();
-
 
   private box(height: number): THREE.Object3D {
     const boxHeight = height * 5 + 0.5;
