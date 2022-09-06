@@ -8,7 +8,7 @@ async function go() {
   Log.info('Got SFX.');
   const lib = new SfxLibrary(sfx);
 
-  const boop = lib.makeBoop();
+  const boop = lib.make808();
 
   boop.trigger(sfx.ctx.currentTime, 2);
   const button = Log.info('boop');

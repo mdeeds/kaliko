@@ -40,4 +40,27 @@ export class SfxLibrary {
     gain.connect(this.sfx.output());
     return gate;
   }
+
+  make808(): TriggerInterface {
+    const o = this.sfx.makeOscillator(40, 'square');
+    const f = this.sfx.makeLPF(160);
+    f.Q.setValueAtTime(1.5, this.sfx.ctx.currentTime);
+    const drop = Automation.makeRamps("50", 4);
+    const hold = Automation.makeRamps("566665", 8);
+    const toNote = new Attenuator(0.05, FreqSink.hzToVoltage(40));
+    const freqSink = new FreqSink();
+    const vca = this.sfx.makeGain();
+
+    hold.connect(vca.gain);
+    drop.connect(toNote);
+    drop.connect(freqSink);
+    freqSink.connect(f.frequency);
+    freqSink.connect(o.frequency);
+
+    o.connect(f);
+    f.connect(vca);
+    vca.connect(this.sfx.output());
+
+    return new MultiTrigger([hold, drop]);
+  }
 }
