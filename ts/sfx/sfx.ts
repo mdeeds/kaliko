@@ -9,9 +9,9 @@ export class Sfx {
     const feedback = ctx.createGain();
 
     mix.gain.setValueAtTime(1.0, ctx.currentTime);
-    lpf.frequency.setValueAtTime(200, ctx.currentTime);
+    lpf.frequency.setValueAtTime(40, ctx.currentTime);
     delay.delayTime.setValueAtTime(0.5, ctx.currentTime);
-    feedback.gain.value = 0.4;
+    feedback.gain.value = 0.75;
 
     mix.connect(delay);
     delay.connect(lpf);

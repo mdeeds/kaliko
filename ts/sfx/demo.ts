@@ -11,8 +11,6 @@ async function go() {
   const boop = lib.makeBoop();
 
   boop.trigger(sfx.ctx.currentTime, 2);
-  Log.info('Triggered');
-
   const button = Log.info('boop');
   button.style.border = 'outset 2px';
   button.addEventListener('click', () => {

@@ -13,15 +13,15 @@ export class SfxLibrary {
   makeBoop(): TriggerInterface {
     const o = this.sfx.makeOscillator(80, 'sawtooth');
     const f = this.sfx.makeLPF(160);
-    const openClose = Automation.makeRamps("5a5", 2);
-    const toNote = new Attenuator(0.1, -1);
+    const openClose = Automation.makeRamps("5a5", 16);
+    const toNote = new Attenuator(0.4, FreqSink.hzToVoltage(40));
     const freqSink = new FreqSink();
     openClose.connect(toNote);
     toNote.connect(freqSink);
     freqSink.connect(f.frequency);
 
     const vca = this.sfx.makeGain();
-    const gate = Automation.makeGate(1);
+    const gate = Automation.makeGate(8);
     gate.connect(vca.gain);
 
     o.connect(f);

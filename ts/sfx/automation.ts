@@ -53,16 +53,13 @@ export class Automation implements TriggerInterface {
   }
 
   public trigger(triggerTime: number, secondsPerMeasure: number) {
-    Log.info(`trigger @ ${triggerTime.toFixed(3)}`);
     for (const param of this.sinks) {
       const delta = secondsPerMeasure / this.subdivisions;
       param.cancelScheduledValues(triggerTime);
-      Log.info(`set to ${this.series[0]} @ ${triggerTime}`);
       param.setValueAtTime(this.series[0], triggerTime);
       for (let i = 1; i < this.series.length; ++i) {
         if (this.series[i] != undefined) {
           const eventTime = triggerTime + delta * this.offset[i];
-          Log.info(`ramp to ${this.series[i]} @ ${eventTime.toFixed(3)}`);
           param.linearRampToValueAtTime(this.series[i], eventTime);
         }
       }
