@@ -69,7 +69,7 @@ export class WorldMap extends THREE.Object3D {
           case '9': o = this.box(9); break;
           case 'h': o = this.house(); break;
           case 't': o = this.tree(); break;
-          case 'p': o = this.ground('Green'); break;
+          case 'p': o = this.ground('#334'); break;
           case 'g': o = this.ground('Green'); break;
         }
         if (o) {
