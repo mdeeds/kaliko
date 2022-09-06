@@ -1,14 +1,15 @@
 import { ParamSink, ParamSinkInterface } from "./paramSink";
 
 export class Attenuator implements ParamSinkInterface {
-  // Offset is applied before gain.
-  // i.e. out = (in + offset) * gain
+  // Offset is applied after gain.
+  // i.e. out = offset + in * gain
   constructor(private gain: number, private offset: number) {
   }
 
   private sinks: ParamSink[] = [];
-  connect(sink: ParamSink) {
+  connect(sink: ParamSink): ParamSink {
     this.sinks.push(sink);
+    return sink;
   }
 
   cancelScheduledValues(time: number): void {
@@ -18,7 +19,7 @@ export class Attenuator implements ParamSinkInterface {
   }
 
   setValueAtTime(value: number, time: number): void {
-    const outValue = (value + this.offset) * this.gain;
+    const outValue = this.offset + value * this.gain;
     for (const sink of this.sinks) {
       sink.setValueAtTime(outValue, time);
     }

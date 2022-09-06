@@ -1,5 +1,5 @@
 import { Log } from "../log";
-import { ParamSink } from "./paramSink";
+import { ParamSink, ParamSinkInterface } from "./paramSink";
 import { TriggerInterface } from "./triggerInterface";
 
 export class Automation implements TriggerInterface {
@@ -47,8 +47,9 @@ export class Automation implements TriggerInterface {
 
   private sinks: ParamSink[] = [];
 
-  connect(sink: ParamSink) {
+  connect(sink: ParamSink): ParamSink {
     this.sinks.push(sink);
+    return sink;
   }
 
   public trigger(triggerTime: number, secondsPerMeasure: number) {

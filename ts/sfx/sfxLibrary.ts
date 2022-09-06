@@ -1,4 +1,6 @@
+import { Attenuator } from "./attenuator";
 import { Automation } from "./automation";
+import { FreqSink } from "./freqSink";
 import { MultiTrigger } from "./multiTrigger";
 import { Sfx } from "./sfx";
 import { TriggerInterface } from "./triggerInterface";
@@ -11,15 +13,20 @@ export class SfxLibrary {
   makeBoop(): TriggerInterface {
     const o = this.sfx.makeOscillator(80, 'sawtooth');
     const f = this.sfx.makeLPF(160);
-    const openClose = Automation.makeRamps("0a0", 2);
-    openClose.connect(f.frequency);
+    const openClose = Automation.makeRamps("5a5", 2);
+    const toNote = new Attenuator(0.1, -1);
+    const freqSink = new FreqSink();
+    openClose.connect(toNote);
+    toNote.connect(freqSink);
+    freqSink.connect(f.frequency);
+
     const vca = this.sfx.makeGain();
     const gate = Automation.makeGate(1);
     gate.connect(vca.gain);
 
     o.connect(f);
     f.connect(vca);
-    f.connect(this.sfx.output());
+    vca.connect(this.sfx.output());
 
     return new MultiTrigger([openClose, gate]);
   }
