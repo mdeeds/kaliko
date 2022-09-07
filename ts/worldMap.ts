@@ -26,6 +26,24 @@ export class WorldMap extends THREE.Object3D {
     return b;
   }
 
+  private triangle(color: string, rotation: number): THREE.Object3D {
+    const geo = new THREE.BufferGeometry();
+    const points: THREE.Vector3[] = [];
+    points.push(
+      new THREE.Vector3(-2.5, 0.01, -2.5),
+      new THREE.Vector3(2.5, 0.01, -2.5),
+      new THREE.Vector3(-2.5, 0.01, 2.5));
+    geo.setFromPoints(points);
+    geo.computeVertexNormals();
+    const m = new THREE.Mesh(
+      geo, new MeshPhongMaterial({
+        color: this.p.in(new THREE.Color(color)),
+        side: THREE.BackSide,
+      }));
+    geo.rotateY(Math.PI / 2 * rotation);
+    return m;
+  }
+
   private house(): THREE.Object3D {
     const house = Assets.models.get('cat house').clone();
     Assets.setMaterials(house, Assets.randomColor(this.p));
@@ -71,6 +89,10 @@ export class WorldMap extends THREE.Object3D {
           case 't': o = this.tree(); break;
           case 'p': o = this.ground('#334'); break;
           case 'g': o = this.ground('Green'); break;
+          case '/': o = this.triangle('#334', 0); break;
+          case '%': o = this.triangle('#334', 1); break;
+          case '?': o = this.triangle('#334', 2); break;
+          case '|': o = this.triangle('#334', 3); break;
         }
         if (o) {
           o.position.x = x;
