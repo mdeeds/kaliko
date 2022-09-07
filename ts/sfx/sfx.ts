@@ -37,6 +37,13 @@ export class Sfx {
     return lpf;
   }
 
+  makeHPF(freq: number) {
+    const lpf = this.ctx.createBiquadFilter();
+    lpf.type = 'highpass';
+    lpf.frequency.setValueAtTime(freq, this.ctx.currentTime);
+    return lpf;
+  }
+
   makeGain() {
     return this.ctx.createGain();
   }
